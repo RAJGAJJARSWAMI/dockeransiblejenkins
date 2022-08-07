@@ -1,8 +1,5 @@
 pipeline{
-    agent any
-    tools {
-      maven 'maven3'
-    }
+    agent any{
     environment {
       DOCKER_TAG = getVersion()
     }
@@ -25,6 +22,7 @@ pipeline{
                 sh "docker build . -t rajgajjar/simpleapplication:${DOCKER_TAG} "
             }
         }
+    }
         
         stage('DockerHub Push'){
             steps{
