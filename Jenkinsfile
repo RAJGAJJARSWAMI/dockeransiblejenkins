@@ -10,13 +10,13 @@ pipeline{
         stage('SCM'){
             steps{
                 git credentialsId: 'github', 
-                    url: 'https://github.com/RAJGAJJARSWAMI/dockeransiblejenkins.git'
+                    url: 'github.com/RAJGAJJARSWAMI/dockeransiblejenkins.git'
             }
         }
         
         stage('Maven Build'){
             steps{
-                sh "mvn clean install -Dmaven.test.failure.ignore=true"
+                sh "mvn clean package"
             }
         }
         
@@ -25,7 +25,6 @@ pipeline{
                 sh "docker build . -t rajgajjar/simpleapplication:${DOCKER_TAG} "
             }
         }
-    }
         
         stage('DockerHub Push'){
             steps{
@@ -33,7 +32,7 @@ pipeline{
                     sh "docker login -u rajgajjar -p ${dockerHubPwd}"
                 }
                 
-                sh "docker push rajgajjar/simpleapplicatio:${DOCKER_TAG} "
+                sh "docker push rajgajjar/simpleapplication:${DOCKER_TAG} "
             }
         }
         
@@ -43,6 +42,7 @@ pipeline{
             }
         }
     }
+}
 
 def getVersion(){
     def commitHash = sh label: '', returnStdout: true, script: 'git rev-parse --short HEAD'
